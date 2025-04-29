@@ -29,32 +29,30 @@ MonoBehaviour:
     referenceMode: 2
     serializationDepthLimit: 64
     assemblyNames:
-    - com.Tivadar.Best.HTTP
     - HybridCLR.Editor
-    - ICSharpCode.SharpZipLib
     - Excel
+    - Framework.UI
     - UniTask
     - HotfixAsm
+    - Framework.Common
     - PPv2URPConverters
     - UniTask.Linq
     - EasySave3
-    - Framework.NetworkDeath
-    - Framework.UI
-    - Framework.Common
+    - Framework.Loading
+    - Assembly-CSharp
+    - ICSharpCode.SharpZipLib
     - Assembly-CSharp-firstpass
     - UniTask.Addressables
-    - Framework.Loading
     - Framework.Resource
-    - UniTask.TextMeshPro
-    - com.Tivadar.Best.HTTP.Profiler.Editor
-    - Framework.Config
+    - Framework.Network
     - Framework.Archive
-    - UniTask.DOTween
-    - Assembly-CSharp
-    - HybridCLR.Runtime
-    - UniTask.Editor
     - Framework.HotUpdate
+    - UniTask.TextMeshPro
+    - UniTask.DOTween
+    - Framework.Config
+    - HybridCLR.Runtime
     - Framework.Event
+    - UniTask.Editor
     - Framework.Tools
     showAdvancedSettings: 0
   addMgrToSceneAutomatically: 0
