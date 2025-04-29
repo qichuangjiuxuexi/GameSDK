@@ -1,0 +1,21 @@
+{
+    "name": "Framework.UI",
+    "rootNamespace": "",
+    "references": [
+        "GUID:5896dd662b2c64604a31831a1e707fa1",
+        "GUID:6c9ae23c0ab374b5782935fbc5ba607b",
+        "GUID:8b6fcb726b83244c8b255d3acfeec1e7",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:84651a3751eca9349aac36a66bba901b",
+        "GUID:2bafac87e7f4b9b418d9448d219b01ab"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

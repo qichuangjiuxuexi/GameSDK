@@ -1,0 +1,19 @@
+{
+    "name": "Framework.Archive",
+    "rootNamespace": "",
+    "references": [
+        "GUID:8b6fcb726b83244c8b255d3acfeec1e7",
+        "GUID:6c9ae23c0ab374b5782935fbc5ba607b",
+        "GUID:5896dd662b2c64604a31831a1e707fa1",
+        "GUID:fa0ae4466369c44189284fb0531156ad"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

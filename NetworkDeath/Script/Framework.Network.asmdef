@@ -1,0 +1,18 @@
+{
+    "name": "Framework.Network",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:8b6fcb726b83244c8b255d3acfeec1e7",
+        "GUID:9069ac25d95ca17448a247f3bb1c769f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
