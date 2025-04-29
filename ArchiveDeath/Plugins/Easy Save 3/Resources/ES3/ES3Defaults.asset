@@ -40,11 +40,13 @@ MonoBehaviour:
     - EasySave3
     - Framework.Loading
     - Assembly-CSharp
+    - Coffee.UIParticle
     - ICSharpCode.SharpZipLib
     - Assembly-CSharp-firstpass
     - UniTask.Addressables
     - Framework.Resource
     - Framework.Network
+    - Coffee.UIParticle.Editor
     - Framework.Archive
     - Framework.HotUpdate
     - UniTask.TextMeshPro
