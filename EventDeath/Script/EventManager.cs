@@ -96,8 +96,9 @@ namespace AppBase.EventDeath
         }
 
         // 触发带数据的事件
-        public void TriggerEvent<T>(string eventName, T eventData) where T: IEventData
+        public void TriggerEvent<T>(T eventData = default) where T: IEventData
         {
+            string eventName = typeof(T).Name;
             TriggerEventInternal<T>(eventName, eventData);
         }
 
