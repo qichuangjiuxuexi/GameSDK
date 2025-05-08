@@ -55,7 +55,7 @@ namespace AppBase.UI
 
 
             //获取到所有的 uibinging
-            List<UIBinding> uiBinds = prefab.GetComponentsInChildren<UIBinding>().ToList();
+            List<UIBinding> uiBinds = prefab.GetComponentsInChildren<UIBinding>(true).ToList();
             List<UIBinding> removeList = new List<UIBinding>();
             for (int i = 0; i < uiBinds.Count; i++)
             {
