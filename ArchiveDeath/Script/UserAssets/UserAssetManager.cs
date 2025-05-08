@@ -9,7 +9,7 @@ namespace GameSDK.UserAssets
     /// <summary>
     /// 资产控制类
     /// </summary>
-    public class UserAssetManager : ModuleBase
+    public partial class UserAssetManager : ModuleBase
     {
         private UserAssetRecord assetRecord;
 
@@ -21,16 +21,52 @@ namespace GameSDK.UserAssets
             assetRecord = AddModule<UserAssetRecord>();
         }
 
-        public UserAssetItem AddAssetItem(int id, UserAssetItem addItem)
+        /// <summary>
+        /// 通过资产添加资产数量
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="addItem"></param>
+        /// <returns></returns>
+        public UserAssetItem AddAssetItem(UserAssetItem addItem)
         {
-            UserAssetItem item  = GetOrCreateAssetItem(id);
+            UserAssetItem item  = GetOrCreateAssetItem(addItem.assetId);
             long oldNum = item.assetNum;
             item.assetNum = Math.Max(0, item.assetNum+addItem.assetNum);
             Save();
 
-            EventUserAssetChange evt = new EventUserAssetChange(id, oldNum, item.assetNum); 
+            EventUserAssetChange evt = new EventUserAssetChange(addItem.assetId, oldNum, item.assetNum); 
             GameBase.Instance.GetModule<EventManager>().TriggerEvent<EventUserAssetChange>(evt);
             return item;
+        }
+        
+        /// <summary>
+        /// 直接增加资产数量
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="addNum"></param>
+        /// <returns></returns>
+        public long AddAssetNum(int id, long addNum)
+        {
+            UserAssetItem item  = GetOrCreateAssetItem(id);
+            long oldNum = item.assetNum;
+            item.assetNum = Math.Max(0, oldNum + addNum);
+            Save();
+
+            EventUserAssetChange evt = new EventUserAssetChange(id, oldNum, item.assetNum); 
+            GameBase.Instance.GetModule<EventManager>().TriggerEvent<EventUserAssetChange>(evt);
+            return oldNum + addNum;
+        }
+        
+        /// <summary>
+        /// 直接减少资产数量
+        /// </summary>
+        /// <param name="assetId">资产类型</param>
+        /// <param name="assetNum">资产数量</param>
+        /// <param name="tag">来源标签，打点使用</param>
+        /// <returns>新的资产数量</returns>
+        public long SubAssetNum(int assetId, long assetNum)
+        {
+            return AddAssetNum(assetId, -assetNum);
         }
         
         /// <summary>
