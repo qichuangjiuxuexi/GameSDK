@@ -44,10 +44,10 @@ MonoBehaviour:
     - ICSharpCode.SharpZipLib
     - Assembly-CSharp-firstpass
     - UniTask.Addressables
+    - Framework.Archive
     - Framework.Resource
     - Framework.Network
     - Coffee.UIParticle.Editor
-    - Framework.Archive
     - Framework.HotUpdate
     - UniTask.TextMeshPro
     - UniTask.DOTween
