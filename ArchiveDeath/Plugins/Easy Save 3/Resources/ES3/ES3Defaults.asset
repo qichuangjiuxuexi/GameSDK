@@ -43,6 +43,7 @@ MonoBehaviour:
     - Coffee.UIParticle
     - ICSharpCode.SharpZipLib
     - Assembly-CSharp-firstpass
+    - FancyScrollView
     - UniTask.Addressables
     - Framework.Archive
     - Framework.Resource
@@ -56,6 +57,7 @@ MonoBehaviour:
     - Framework.Event
     - UniTask.Editor
     - Framework.Tools
+    - FancyScrollView.Editor
     showAdvancedSettings: 0
   addMgrToSceneAutomatically: 0
   autoUpdateReferences: 1
