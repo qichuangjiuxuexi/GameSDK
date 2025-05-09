@@ -25,7 +25,7 @@ namespace GameSDK.UserAssets
         
         public UserAssetItem(int id, long num)
         {
-            assetNum = id;
+            assetId = id;
             assetNum = num;
         }
     }

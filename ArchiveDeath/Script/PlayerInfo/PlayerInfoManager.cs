@@ -23,7 +23,7 @@ namespace AppBase.PlayerInfo
         /// <summary>
         /// 创建新存档
         /// </summary>
-        protected void OnNewRecord()
+        protected virtual void OnNewRecord()
         {
         }
     }

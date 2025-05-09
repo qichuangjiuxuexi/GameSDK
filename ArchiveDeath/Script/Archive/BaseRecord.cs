@@ -40,7 +40,7 @@ namespace AppBase.ArchiveDeath
         /// <summary>
         /// 当新建存档时调用
         /// </summary>
-        private void OnNewRecord()
+        protected virtual void OnNewRecord()
         {
         }
         /// <summary>

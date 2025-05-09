@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using AppBase.Module;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace AppBase.ArchiveDeath
@@ -45,7 +46,7 @@ namespace AppBase.ArchiveDeath
                 var json = ReadFromEs3(archiveName);
                 if (!string.IsNullOrEmpty(json))
                 {
-                    return JsonUtility.FromJson<T>(json);
+                    return JsonConvert.DeserializeObject<T>(json);
                 }
                 return null;
             }
@@ -91,7 +92,7 @@ namespace AppBase.ArchiveDeath
         {
             if (archiveDict.TryGetValue(archiveName, out var data))
             {
-                string json = JsonUtility.ToJson(data);
+                string json = JsonConvert.SerializeObject(data);
                 WriteToES3(archiveName, json);
                 archiveDict[archiveName] = data;
             }

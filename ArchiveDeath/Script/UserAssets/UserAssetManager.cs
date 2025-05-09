@@ -21,6 +21,12 @@ namespace GameSDK.UserAssets
             assetRecord = AddModule<UserAssetRecord>();
         }
 
+        protected override void OnAfterInit()
+        {
+            base.OnAfterInit();
+            ConsumeAllAssets(); //初始化结算所有临时资产
+        }
+
         /// <summary>
         /// 通过资产添加资产数量
         /// </summary>
@@ -116,7 +122,7 @@ namespace GameSDK.UserAssets
         /// <returns></returns>
         public long GetAssetNum(int id)
         {
-            return AssetItems.TryGetValue(id, out var value) ? value.assetNum : 0;
+            return GetAssetItem(id).assetNum;
         }
 
         private void Save()
