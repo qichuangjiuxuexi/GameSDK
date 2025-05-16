@@ -305,7 +305,15 @@ public class GameLauncher : MonoBehaviour
     //补充元数据
     private IEnumerator LoadMetadataForAOTAssemblies()
     {
-        var aotAssemblies = GetMetaDataDllToLoad();
+        string[] aotAssemblies = null;
+        
+        var iEnumerator = GetMetaDataDllToLoad(strings =>
+        {
+            aotAssemblies = strings;
+        });
+        
+        yield return iEnumerator;
+        
         if (aotAssemblies == null)
         {
             yield break;
@@ -316,7 +324,10 @@ public class GameLauncher : MonoBehaviour
             if(string.IsNullOrEmpty(aotDllName))
                 continue;
             var path = $"{META_DATA_DLL_PATH}{aotDllName}.bytes";
-            ReadDllBytes(path);
+            iEnumerator = ReadDllBytes(path);
+            
+            yield return iEnumerator;
+            
             if (_dllBytes != null)
             {
                 var err = RuntimeApi.LoadMetadataForAOTAssembly(_dllBytes, HomologousImageMode.SuperSet);
@@ -327,42 +338,43 @@ public class GameLauncher : MonoBehaviour
         Debug.Log("LoadMetadataForAOTAssemblies finish!");
     }
     
-    private string[] GetMetaDataDllToLoad()
+    private IEnumerator GetMetaDataDllToLoad(Action<string[]> callback)
     {
         string[] result = null;
-        
         var operation = Addressables.LoadAssetAsync<TextAsset>(META_DATA_DLLS_TO_LOAD_PATH);
-        operation.WaitForCompletion();
-        
+        yield return operation;
+
         if (operation.Status == AsyncOperationStatus.Succeeded)
         {
             var text = operation.Result.text;
-            result = text.Split("|");
+            Debug.Log($"load metaDataText");
+            result = text.Split('|');
         }
         else
         {
-            Debug.LogError($"cant load metaDataText,path:{META_DATA_DLLS_TO_LOAD_PATH}");
+            Debug.LogError($"cant load metaDataText, path:{META_DATA_DLLS_TO_LOAD_PATH}");
         }
-        
-        // 使用完后释放
+
         Addressables.Release(operation);
 
-        return result;
+        // 调用回调，返回数据
+        callback?.Invoke(result);
     }
     
-    private void ReadDllBytes(string path)
+    private IEnumerator ReadDllBytes(string path)
     {
         var operation = Addressables.LoadAssetAsync<TextAsset>(path);
-        operation.WaitForCompletion();
-        
-        if (operation.Status != AsyncOperationStatus.Succeeded)
+        yield return operation;
+
+        byte[] dllBytes = null;
+        if (operation.Status == AsyncOperationStatus.Succeeded)
         {
-            Debug.LogError($"cant load dllText,path:{path}");
-            _dllBytes = null;
+            _dllBytes = operation.Result.bytes;
+            Debug.LogError($"load dllText, path:{path}");
         }
         else
         {
-            _dllBytes = operation.Result.bytes;
+            Debug.LogError($"cant load dllText, path:{path}");
         }
         Addressables.Release(operation);
     }
