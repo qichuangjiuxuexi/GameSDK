@@ -71,33 +71,41 @@ namespace AppBase.ConfigDeath
         }
 
         /// <summary>
-        /// 异步加在配置
+        /// 获取配置文件信息（数组）
         /// </summary>
-        /// <param name="address"></param>
-        /// <param name="rm"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public IEnumerator LoadConfigAsync<T>(string address,  Action<T> callback)
+        /// <typeparam name="T">对象类型</typeparam>
+        /// <param name="address">配置文件路径</param>
+        /// <returns>配置数组</returns>
+        public void GetConfigListAsync<T>(string address, Action<BaseConfigList<T>> callback) where T : BaseConfig
+            => GetConfigFormJsonAsync(address, callback);
+        
+        protected void GetConfigFormJsonAsync<T>(string address, Action<T> callback) where T : class, IConfigList, new()
         {
+            if (string.IsNullOrEmpty(address)) return;
             //缓存里面拿
             if (configAssets.ContainsKey(address))
             {
-                callback?.Invoke((T)configAssets[address]);
+                callback((T)configAssets[address]);
+                return;
             }
             
-            var load = GameBase.Instance.GetModule<ResourceManager>().LoadAsset<ScriptableObject>(address, this.GetResourceReference(), asset =>
-            {
-                if (asset is T obj)
+             
+            GameBase.Instance.GetModule<ResourceManager>().LoadAsset<TextAsset>(address, this.GetResourceReference(),
+                asset =>
                 {
-                    configAssets[address] = (IConfigList)asset;
-                    callback?.Invoke(obj);
-                }
-                else
-                {
-                    Debug.LogError("加载失败  "+ address);
-                }
-            });
-            yield return load;
+                    T obj = new T();
+                    JsonUtility.FromJsonOverwrite(asset.text, obj);
+                      
+                    if (obj != null)
+                    {
+                        configAssets[address] = obj;
+                        callback((T)configAssets[address]);
+                    }
+                    else
+                    {
+                        Debug.LogError("加载失败 ： "+ address);
+                    }
+                });
         }
     }
 }
