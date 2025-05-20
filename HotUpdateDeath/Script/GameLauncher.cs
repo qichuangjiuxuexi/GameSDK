@@ -26,6 +26,7 @@ public class GameLauncher : MonoBehaviour
     private long _hotFixDownloadSize;
     private bool _hasNewVersion;
     private bool _isVerifyRemoteCatalog;
+    private Assembly hotfixAsm;
     
 
 
@@ -68,15 +69,20 @@ public class GameLauncher : MonoBehaviour
         if (_isVerifyRemoteCatalog && _hasNewVersion)
         {
             descText.text += "Check For Catalog Updates!" + "\n";
+            Debug.Log("Check For Catalog Updates!");
             yield return CheckDownloadSize();
             descText.text += "Start Download Assets!" + "\n";
+            Debug.Log("Start Download Assets!");
             yield return VersionUpdate();
         }
 #endif
         
         descText.text += "start loadAsm! " + "\n";
+        Debug.Log("start loadAsm!");
+
         yield return LoadAssemblies();
         descText.text += "start Game! " + "\n";
+        Debug.Log("start Game!");
         yield return StartGame();
     }
     
@@ -93,16 +99,19 @@ public class GameLauncher : MonoBehaviour
             catalogPath = catalogRequest.downloadHandler.text;
             Debug.Log("catalogPath: " + catalogPath);
             descText.text += "catalogPath: " + catalogPath + "\n";
+            Debug.Log("catalogPath: " + catalogPath);
+
         }
         else
         {
             Debug.LogError("catalogPath check failed: " + catalogRequest.error);
             descText.text += "catalogPath check failed: " + catalogRequest.error + "\n";
+            Debug.Log("catalogPath check failed: " + catalogRequest.error);
             yield break;
         }
 
         descText.text += "addressable initialize success! " + "\n";
-
+        Debug.Log("addressable initialize success! ");
         UnityWebRequest www = UnityWebRequest.Get(versionUrl);
         yield return www.SendWebRequest();
 
@@ -112,8 +121,10 @@ public class GameLauncher : MonoBehaviour
             if (serverVersion != localVersion)
             {
                 descText.text += "new version: " + serverVersion + "\n";
+                Debug.Log("new version: " + serverVersion);
                 _hasNewVersion = true;
                 descText.text += "Verify Remote Catalog!" + "\n";
+                Debug.Log("Verify Remote Catalog!");
                 using (UnityWebRequest request = UnityWebRequest.Get(catalogPath))
                 {
                     yield return request.SendWebRequest();
@@ -122,6 +133,7 @@ public class GameLauncher : MonoBehaviour
                     {
                         Debug.Log("远程目录文件存在且可访问");
                         descText.text += " catalog can load " + "\n";
+                        Debug.Log("catalog can load");
                         _isVerifyRemoteCatalog = true;
                         if (!Directory.Exists(Path.GetDirectoryName(CatalogLocalPath)))
                         {
@@ -156,6 +168,7 @@ public class GameLauncher : MonoBehaviour
             var handler = Addressables.LoadContentCatalogAsync(CatalogLocalPath);
             yield return handler;
             descText.text += "Update catalog succeeded!" + "\n";
+            Debug.Log("Update catalog succeeded!");
             Addressables.Release(handler);
         }
         yield return null; // 等待一帧以确保清理完成
@@ -174,6 +187,7 @@ public class GameLauncher : MonoBehaviour
             {
                 Debug.LogError($"Check Catalog update failed, remaining retries: {retryCount}, error message: {getSizeHandle.OperationException}");
                 descText.text += $"Check Catalog update failed, remaining retries: {retryCount} \n";
+                Debug.Log($"Check Catalog update failed, remaining retries: {retryCount}");
                 retryCount--;
                 if (retryCount > 0)
                 {
@@ -182,6 +196,7 @@ public class GameLauncher : MonoBehaviour
                 else
                 {
                     descText.text += "Check download size field!" + "\n";
+                    Debug.Log("Check download size field!");
                     Addressables.Release(getSizeHandle);
                     yield break;
                 }
@@ -189,6 +204,7 @@ public class GameLauncher : MonoBehaviour
         }
 
         descText.text += "Check download size end! \n";
+        Debug.Log("Check download size end!");
         
         // 2. 检查是否有错误
         if (getSizeHandle.Status == AsyncOperationStatus.Succeeded)
@@ -197,6 +213,7 @@ public class GameLauncher : MonoBehaviour
             var size = getSizeHandle.Result;
             _hotFixDownloadSize = size;
             descText.text += $"Need download size: {size}" + "\n";
+            Debug.Log($"Need download size: {size}");
 
             if (size == 0)
             {
@@ -212,9 +229,11 @@ public class GameLauncher : MonoBehaviour
     IEnumerator VersionUpdate()
     {
         descText.text += "start download!!" + "\n";
+        Debug.Log("start download!!");
         if (_hotFixDownloadSize == 0)
         {
             descText.text += "size is 0 !!" + "\n";
+            Debug.Log("size is 0 !!");
             yield break;
         }
         // 添加重试机制和下载进度显示
@@ -254,6 +273,7 @@ public class GameLauncher : MonoBehaviour
                 else
                 {
                     descText.text += "Hot update download failed\n";
+                    Debug.Log("Hot update download failed");
                     Addressables.Release(downloadHandle); // 释放资源
                     yield break;
                 }
@@ -370,7 +390,7 @@ public class GameLauncher : MonoBehaviour
         if (operation.Status == AsyncOperationStatus.Succeeded)
         {
             _dllBytes = operation.Result.bytes;
-            Debug.LogError($"load dllText, path:{path}");
+            Debug.Log($"load dllText, path:{path}");
         }
         else
         {
@@ -385,23 +405,36 @@ public class GameLauncher : MonoBehaviour
     {
         foreach (var dllName in _gamePlayDependencyDlls)
         {
-            yield return LoadSingleHotUpdateAssembly(dllName);
+            yield return LoadDependencyAssembly(dllName);
         }
 
         Debug.Log("LoadGamePlayDependencyAssemblies finish!");
     }
     
-    private IEnumerator LoadSingleHotUpdateAssembly(string dllName)
+    private IEnumerator LoadDependencyAssembly(string dllName)
     {
         var path = $"{HOT_UPDATE_DLL_PATH}{dllName}.bytes";
-        ReadDllBytes(path);
+        yield return ReadDllBytes(path);
         if (_dllBytes != null)
         {
             var assembly = Assembly.Load(_dllBytes);
             _allHotUpdateAssemblies.Add(assembly.FullName, assembly);
             Debug.Log($"Load Assembly success,assembly Name:{assembly.FullName}");
         }
-
+        yield return null;
+    }
+    
+    private IEnumerator LoadHotUpdateAssembly()
+    {
+        var path = $"{HOT_UPDATE_DLL_PATH}{HotUpdateDll}.bytes";
+        yield return ReadDllBytes(path);
+        if (_dllBytes != null)
+        {
+            var assembly = Assembly.Load(_dllBytes);
+            hotfixAsm = assembly;
+            _allHotUpdateAssemblies.Add(assembly.FullName, assembly);
+            Debug.Log($"Load Assembly success,assembly Name:{assembly.FullName}");
+        }
         yield return null;
     }
     
@@ -417,7 +450,7 @@ public class GameLauncher : MonoBehaviour
         }
         else
         {
-            yield return LoadSingleHotUpdateAssembly(HotUpdateDll);
+            yield return LoadHotUpdateAssembly();
             Debug.Log("Load HotUpdateDll from local");
         }
         Debug.Log("LoadHotUpdateAssemblies finish!");
@@ -427,9 +460,10 @@ public class GameLauncher : MonoBehaviour
     {
         string typeName = "Game";
         string methodName = "Start";
+        Debug.Log("GetAssemblies HotfixAsm");
         // 获取当前执行的程序集
-        Assembly assembly = AppDomain.CurrentDomain.GetAssemblies()
-            .FirstOrDefault(assembly => assembly.GetName().Name == "HotfixAsm");
+        Assembly assembly = hotfixAsm == null? AppDomain.CurrentDomain.GetAssemblies()
+            .FirstOrDefault(assembly => assembly.GetName().Name == "HotfixAsm"): hotfixAsm;
         
         // 获取类型
         Type type = assembly.GetType(typeName);
