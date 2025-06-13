@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using AppBase.Module;
@@ -58,16 +59,8 @@ namespace AppBase.ConfigDeath
 
             T obj = new T();
             JsonUtility.FromJsonOverwrite(str, obj);
-            if (obj != null)
-            {
-                configAssets[address] = obj;
-                return (T)obj;
-            }
-            else
-            {
-                Debug.LogError("加载失败 ： "+ address);
-                return null;
-            }
+            configAssets[address] = obj;
+            return (T)obj;
         }
 
         /// <summary>
@@ -107,5 +100,25 @@ namespace AppBase.ConfigDeath
                     }
                 });
         }
+
+        public string GetValueWithKey<T>(string address, string key) where T : BaseConfig
+        {
+            Type type = typeof(T);
+            string value = "";
+            var kField = type.GetField("Key", BindingFlags.Public | BindingFlags.Instance);
+            var vField = type.GetField("Value", BindingFlags.Public | BindingFlags.Instance);
+            if (kField == null || vField == null) return value;
+            
+            List<T> t = GetConfigList<T>(address);
+            foreach (var baseConfig in t)
+            {
+                string k = kField.GetValue(baseConfig).ToString();
+                if (key == k)
+                {
+                    value = vField.GetValue(baseConfig).ToString();
+                }
+            }
+            return value;
+        } 
     }
 }
