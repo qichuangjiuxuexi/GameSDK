@@ -32,6 +32,7 @@ MonoBehaviour:
     - HybridCLR.Editor
     - Excel
     - Framework.UI
+    - com.alelievr.NodeGraphProcessor.Editor
     - UniTask
     - HotfixAsm
     - Framework.Common
@@ -40,6 +41,7 @@ MonoBehaviour:
     - EasySave3
     - Framework.Loading
     - Assembly-CSharp
+    - com.alelievr.NodeGraphProcessor.Runtime
     - Coffee.UIParticle
     - ICSharpCode.SharpZipLib
     - Assembly-CSharp-firstpass
@@ -48,6 +50,7 @@ MonoBehaviour:
     - Framework.Archive
     - Framework.Resource
     - Framework.Network
+    - Framework.Dialogue
     - Coffee.UIParticle.Editor
     - Framework.HotUpdate
     - UniTask.TextMeshPro

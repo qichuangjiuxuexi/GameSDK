@@ -1,0 +1,21 @@
+{
+    "name": "Framework.Dialogue",
+    "rootNamespace": "",
+    "references": [
+        "GUID:8b6fcb726b83244c8b255d3acfeec1e7",
+        "GUID:ca937d03ee5dd4d699091438dc0f3ae6",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:6c9ae23c0ab374b5782935fbc5ba607b",
+        "GUID:676985be63e7e46b5987c1ef762c5d2d",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
