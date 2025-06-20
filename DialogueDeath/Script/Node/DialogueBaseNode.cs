@@ -16,11 +16,11 @@ public class DialogueBaseNode : BaseNode
     public async UniTask<bool> ShowDialogue(DialogueGraph skillGraph)
     {
         Graph = skillGraph;
-        Debuggers.Log(Graph.name,$"执行技能步骤 {name}");
+        Debuggers.Log(Graph.name,$"执行对话步骤 {name}");
         var rst= await ShowDialogueInner();
         if (!rst)
         {
-            Debuggers.Log(Graph.name,$"执行技能步骤失败 {name}");
+            Debuggers.Log(Graph.name,$"执行对话步骤失败 {name}");
         }
         return rst;
     }

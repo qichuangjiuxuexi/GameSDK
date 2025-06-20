@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using GraphProcessor;
@@ -123,12 +124,20 @@ public class DialogueGraph : BaseGraph
         var outNodes = GetOutPutNode(dialogueNode).ToList();
         if (isSucc)
         {
-            foreach (var node in outNodes)
+            if (dialogueNode is BranchNode branchNode)
             {
-                if (node is DialogueBaseNode baseNode)
+                int option = await branchNode.GetOption();
+                await ExecuteStep(contextId, (DialogueBaseNode)outNodes[option]);
+            }
+            else
+            {
+                foreach (var node in outNodes)
                 {
-                    ExecuteStep(contextId, baseNode);
-                }
+                    if (node is DialogueBaseNode baseNode)
+                    {
+                        await ExecuteStep(contextId, baseNode);
+                    }
+                }   
             }
         }
 
@@ -158,14 +167,33 @@ public class DialogueGraph : BaseGraph
         void SortOrderInner(BaseNode baseNode)
         {
             baseNode.outputOrder = new List<int>();
-            foreach (var node in baseNode.GetOutputNodes())
+            if (baseNode is BranchNode)
             {
-                if (baseNode.outputOrder.Contains(node.computeOrder))
+                Dictionary<string, int> dic = new();
+                int index = 0;
+                foreach (var node in baseNode.GetOutputNodes())
                 {
-                    Debug.LogError($"图{name} 排序结点错误 {baseNode}的输出序列有重复 {node} {node.computeOrder}");
-                    return;
-                }
-                baseNode.outputOrder.Add(node.computeOrder);
+                    dic[baseNode.outputPorts[index].portData.displayName] = node.computeOrder;
+                    index++;
+                }   
+                var list = dic
+                    .OrderBy(pair => 
+                        int.Parse(Regex.Match(pair.Key, @"\d+").Value))
+                    .Select(pair => pair.Value)
+                    .ToList();
+                baseNode.outputOrder = list;
+            }
+            else
+            {
+                foreach (var node in baseNode.GetOutputNodes())
+                {
+                    if (baseNode.outputOrder.Contains(node.computeOrder))
+                    {
+                        Debug.LogError($"图{name} 排序结点错误 {baseNode}的输出序列有重复 {node} {node.computeOrder}");
+                        return;
+                    }
+                    baseNode.outputOrder.Add(node.computeOrder);
+                }   
             }
             foreach (var node in baseNode.GetOutputNodes())
             {

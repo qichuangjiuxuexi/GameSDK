@@ -11,7 +11,6 @@ public partial class DialogueUIView : UIView
         void OnClick()
         {
             nextCompletion.TrySetResult(true);
-            Button.Button.onClick.RemoveListener(OnClick);
         }
         Button.Button.onClick.AddListener(OnClick);
         
@@ -19,6 +18,8 @@ public partial class DialogueUIView : UIView
         Desc.TextMeshProUGUI.text = data.content;
         
         await nextCompletion.Task;
+        
+        Button.Button.onClick.RemoveListener(OnClick);
         
         gameObject.SetActive(false);
         return true;

@@ -8,8 +8,11 @@ using UnityEngine;
 public class DialogueManager : MonoModule
 {
     public override string GameObjectPath => "UICanvas/Dialogue";
+    
     private DialogueUIView dialogueUIView;
-
+    private BranchUIView branchUIView;
+    
+    
     protected override void OnInit()
     {
         base.OnInit();
@@ -17,11 +20,19 @@ public class DialogueManager : MonoModule
         dialogueUIView = GameObject.GetComponentInChildren<DialogueUIView>(true);
         dialogueUIView?.gameObject.SetActive(false);
         
+        branchUIView = GameObject.GetComponentInChildren<BranchUIView>(true);
+        branchUIView?.gameObject.SetActive(false);
+
     }
 
     public DialogueUIView GetDialogueUIView()
     {
         return dialogueUIView;
+    }
+    
+    public BranchUIView GetBranchUIView()
+    {
+        return branchUIView;
     }
     
     public async UniTaskVoid ExecuteDialogue(DialogueData dialogue)
