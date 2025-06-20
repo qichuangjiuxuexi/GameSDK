@@ -51,6 +51,7 @@ public class DialogueManager : MonoModule
         Debuggers.Log(TAG,$"Show Dialogue CostTime {Time.realtimeSinceStartupAsDouble - startTime}");
 
     }
+    
 
     private DialogueGraph LoadInstanceDialogue(DialogueData dialogue)
     {
@@ -78,7 +79,7 @@ public class DialogueManager : MonoModule
 
     public DialogueGraph LoadGraph(string path)
     {
-        return (GameBase.Instance.GetModule<ResourceManager>().LoadAssetAsync<DialogueGraph>(path, this.GetResourceReference())
+        return (GameBase.Instance.GetModule<ResourceManager>().LoadAsset<DialogueGraph>(path, this.GetResourceReference())
             .WaitForCompletion() as DialogueGraph);
     }
 }

@@ -54,7 +54,7 @@ namespace AppBase.ConfigDeath
             }
             
             //获取资源
-            var handler = GameBase.Instance.GetModule<ResourceManager>().LoadAssetAsync<TextAsset>(address, this.GetResourceReference());
+            var handler = GameBase.Instance.GetModule<ResourceManager>().LoadAsset<TextAsset>(address, this.GetResourceReference());
             string str = handler?.WaitForCompletion<TextAsset>().text;
 
             T obj = new T();
@@ -83,7 +83,7 @@ namespace AppBase.ConfigDeath
             }
             
              
-            GameBase.Instance.GetModule<ResourceManager>().LoadAssetAsync<TextAsset>(address, this.GetResourceReference(),
+            GameBase.Instance.GetModule<ResourceManager>().LoadAsset<TextAsset>(address, this.GetResourceReference(),
                 asset =>
                 {
                     T obj = new T();

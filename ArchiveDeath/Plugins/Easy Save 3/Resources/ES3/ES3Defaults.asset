@@ -32,16 +32,16 @@ MonoBehaviour:
     - HybridCLR.Editor
     - Excel
     - Framework.UI
-    - com.alelievr.NodeGraphProcessor.Editor
     - UniTask
     - HotfixAsm
     - Framework.Common
     - PPv2URPConverters
     - UniTask.Linq
     - EasySave3
+    - NodeGraphProcessor.Runtime
     - Framework.Loading
+    - com.alelievr.NodeGraphProcessor.Editor
     - Assembly-CSharp
-    - com.alelievr.NodeGraphProcessor.Runtime
     - Coffee.UIParticle
     - ICSharpCode.SharpZipLib
     - Assembly-CSharp-firstpass

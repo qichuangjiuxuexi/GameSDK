@@ -13,14 +13,8 @@ namespace AppBase.Resource
 		/// 资源缓存池
 		/// </summary>
 		protected Dictionary<string, ResourceHandler> assetsPool = new();
-
-		public T LoadAsset<T>(string address, IResourceReference reference) where T : Object
-		{
-			T asset = LoadAssetAsync<T>(address, reference).WaitForCompletion() as T;
-			return asset;
-		}
-
-		public ResourceHandler LoadAssetAsync<T>(string address, IResourceReference reference, Action<T> successCallback = null, Action failureCallback = null) where T: Object
+    
+		public ResourceHandler LoadAsset<T>(string address, IResourceReference reference, Action<T> successCallback = null, Action failureCallback = null) where T: Object
 		{
 			if (!assetsPool.TryGetValue(address, out var handler)){
 				handler = new ResourceHandler(address);
