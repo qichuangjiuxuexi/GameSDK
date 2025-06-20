@@ -14,7 +14,7 @@ public partial class DialogueUIView : UIView
         }
         Button.Button.onClick.AddListener(OnClick);
         
-        Speaker.TextMeshProUGUI.text = data.speaker;
+        Speaker.TextMeshProUGUI.text = data.speaker+" : ";
         Desc.TextMeshProUGUI.text = data.content;
         
         await nextCompletion.Task;
