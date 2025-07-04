@@ -17,6 +17,13 @@ namespace AppBase.EventDeath
             eventListenersDictionary = new Dictionary<string, List<EventListener>>();
         }
         // 注册带数据的事件
+        public void AddEventListener<T>(Action<T> eventCallback, int priority = 0) where T : IEventData
+        {
+            string eventName = typeof(T).Name;
+            RegisterEvent(eventName, eventCallback, priority);
+        }
+        
+        // 注册带数据的事件
         public void AddEventListener<T>(string eventName, Action<T> eventCallback, int priority = 0) where T : IEventData
         {
             RegisterEvent(eventName, eventCallback, priority);
@@ -78,6 +85,27 @@ namespace AppBase.EventDeath
         // 注销事件监听器
         public void RemoveEventListener<T>(string eventName, Action<T> eventCallback) where T : IEventData
         {
+            if (eventListenersDictionary.ContainsKey(eventName))
+            {
+                var listenerToRemove = eventListenersDictionary[eventName]
+                    .FirstOrDefault(l => l.eventCallback == (Delegate)eventCallback);
+
+                if (listenerToRemove != null)
+                {
+                    eventListenersDictionary[eventName].Remove(listenerToRemove);
+                }
+
+                if (eventListenersDictionary[eventName].Count == 0)
+                {
+                    eventListenersDictionary.Remove(eventName);
+                }
+            }
+        }
+        
+        // 注销事件监听器
+        public void RemoveEventListener<T>( Action<T> eventCallback) where T : IEventData
+        {
+            string eventName = typeof(T).Name;
             if (eventListenersDictionary.ContainsKey(eventName))
             {
                 var listenerToRemove = eventListenersDictionary[eventName]
